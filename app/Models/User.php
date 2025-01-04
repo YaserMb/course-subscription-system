@@ -45,4 +45,21 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function subscriptionPlan()
+    {
+        return $this->belongsTo(SubscriptionPlan::class);
+    }
+
+    public function downloadHistories()
+    {
+        return $this->hasMany(DownloadHistory::class);
+    }
+
+    public function courses()
+    {
+        return $this->belongsToMany(Course::class, 'download_histories');
+    }
+
+
 }
