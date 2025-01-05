@@ -31,7 +31,6 @@ class CourseController extends Controller
         // Get user's subscription plan and check download limit
         $subscriptionPlan = $user->subscriptionPlan;
         $downloadedCount = $user->courses()->count();
-
         if ($downloadedCount >= $subscriptionPlan->limit) {
             return response()->json([
                 'success' => false,
@@ -40,8 +39,10 @@ class CourseController extends Controller
         }
 
         try {
-            // Record the download
-            $user->courses()->attach($course->id, ['downloaded_at' => now()]);
+            $user->downloadHistories()->create([
+                'course_id' => $course->id,
+                'downloaded_at' => now()
+            ]);
 
             return response()->json([
                 'success' => true,
