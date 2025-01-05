@@ -16,7 +16,7 @@ class CheckSubscription
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && empty(Auth::user()->subscription_plan_id) || Auth::user()->subscription_plan_id == null) {
+        if (Auth::check() && empty(Auth::user()->subscription_plan_id) || Auth::user()->subscription_plan_id == null && !Auth::user()->is_admin) {
             return redirect()->route('subscription-plans.plans');
         }
 

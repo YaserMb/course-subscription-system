@@ -17,4 +17,9 @@ class DownloadHistory extends Model
     {
         return $this->belongsTo(Course::class);
     }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

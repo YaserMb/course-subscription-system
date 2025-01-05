@@ -61,5 +61,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Course::class, 'download_histories');
     }
 
+    public function downloadHistory()
+    {
+        return $this->hasMany(DownloadHistory::class);
+    }
+
 
 }

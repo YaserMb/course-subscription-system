@@ -14,9 +14,10 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
-        return view('auth.login');
+        $isAdmin = $request->query('admin', false);
+        return view('auth.login', compact('isAdmin'));
     }
 
     /**
@@ -27,12 +28,21 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        // Check if user has a subscription plan
+        if ($request->has('admin')) {
+            if (!Auth::user()->is_admin) {
+                Auth::logout();
+                return redirect()->route('login', ['admin' => 1])
+                    ->withErrors(['email' => 'These credentials do not have admin access.']);
+            }
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
+        // Regular user login
         if (empty(Auth::user()->subscription_plan_id)) {
             return redirect()->route('subscription-plans.plans');
         }
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return redirect()->intended(route('dashboard'));
     }
 
     /**

@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
 
         // Run other seeders
         $this->call([
+            AdminSeeder::class,
             SubscriptionPlanSeeder::class,
             CourseSeeder::class,
         ]);

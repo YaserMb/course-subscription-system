@@ -5,6 +5,14 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
+        @if($isAdmin)
+            <input type="hidden" name="admin" value="1">
+            <div class="mb-4 text-center">
+                <h2 class="text-xl font-semibold text-gray-800">Admin Login</h2>
+                <p class="text-sm text-gray-600 mt-1">Please enter your admin credentials</p>
+            </div>
+        @endif
+
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
@@ -43,5 +51,13 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+
+        @if(!$isAdmin)
+            <div class="mt-4 text-center">
+                <a href="{{ route('login', ['admin' => 1]) }}" class="text-sm text-gray-600 hover:text-gray-900">
+                    {{ __('Admin Login') }}
+                </a>
+            </div>
+        @endif
     </form>
 </x-guest-layout>

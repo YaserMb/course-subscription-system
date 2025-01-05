@@ -23,4 +23,11 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('subscription-plans', SubscriptionPlanController::class);
 
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
+    Route::get('/courses', [App\Http\Controllers\Admin\CourseController::class, 'index'])->name('courses');
+    Route::resource('courses', App\Http\Controllers\Admin\CourseController::class);
+});
+
 require __DIR__.'/auth.php';
