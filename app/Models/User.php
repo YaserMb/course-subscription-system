@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function subscriptionPlan()
     {
-        return $this->belongsTo(SubscriptionPlan::class);
+        return $this->belongsTo(SubscriptionPlan::class, 'subscription_plan_id');
     }
 
     public function downloadHistories()
