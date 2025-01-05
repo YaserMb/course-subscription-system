@@ -45,6 +45,12 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Redirect to subscription plans if no plan is selected
+        if (empty($user->subscription_plan_id)) {
+            return redirect()->route('subscription-plans.index')
+                ->with('warning', 'Please select a subscription plan to continue.');
+        }
+
         return redirect(route('dashboard', absolute: false));
     }
 }

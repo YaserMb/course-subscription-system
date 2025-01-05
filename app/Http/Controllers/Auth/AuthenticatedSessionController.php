@@ -25,8 +25,12 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
+
+        // Check if user has a subscription plan
+        if (empty(Auth::user()->subscription_plan_id)) {
+            return redirect()->route('subscription-plans.plans');
+        }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }
