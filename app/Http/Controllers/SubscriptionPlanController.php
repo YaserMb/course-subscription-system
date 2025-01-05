@@ -72,7 +72,6 @@ class SubscriptionPlanController extends Controller
         $user = auth()->user();
         $user->subscription_plan_id = $subscriptionPlan->id;
         $user->save();
-
         return redirect()->route('dashboard')
             ->with('success', 'Successfully subscribed to ' . $subscriptionPlan->name);
     }
