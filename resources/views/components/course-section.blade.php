@@ -7,9 +7,12 @@
             <p class="text-gray-600 mb-4">{{ $course->description }}</p>
 
             @if ($downloadedCourses->contains($course->id))
-                <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-md">
-                    Downloaded
-                </span>
+                <button
+                    data-course-id="{{ $course->id }}"
+                    class="download-file-btn bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors"
+                >
+                    Download File
+                </button>
             @else
                 <button
                     data-course-id="{{ $course->id }}"
@@ -24,6 +27,7 @@
 
 <script>
 $(document).ready(function() {
+    // Handle initial download
     $('.download-btn').on('click', function() {
         const button = $(this);
         const courseId = button.data('course-id');
@@ -38,12 +42,21 @@ $(document).ready(function() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
-                // Replace button with downloaded label
+                // Replace button with download file button
                 button.replaceWith(`
-                    <span class="inline-block bg-green-100 text-green-800 px-4 py-2 rounded-md">
-                        Downloaded
-                    </span>
+                    <button
+                        data-course-id="${courseId}"
+                        class="download-file-btn bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md transition-colors"
+                    >
+                        Download File
+                    </button>
                 `);
+
+                // Open download in new tab
+                if (response.download_url) {
+                    window.open(response.download_url, '_blank');
+                }
+
                 showNotification('Course downloaded successfully!', 'success');
             },
             error: function(xhr) {
@@ -52,6 +65,34 @@ $(document).ready(function() {
 
                 // Show error message
                 const message = xhr.responseJSON?.message || 'Failed to download course. Please try again.';
+                showNotification(message, 'error');
+            }
+        });
+    });
+
+    // Handle file download for already downloaded courses
+    $(document).on('click', '.download-file-btn', function() {
+        const button = $(this);
+        const courseId = button.data('course-id');
+
+        // Disable button and show loading state
+        button.prop('disabled', true).text('Preparing Download...');
+
+        $.ajax({
+            url: `/courses/${courseId}/download`,
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.download_url) {
+                    window.open(response.download_url, '_blank');
+                }
+                button.prop('disabled', false).text('Download File');
+            },
+            error: function(xhr) {
+                button.prop('disabled', false).text('Download File');
+                const message = xhr.responseJSON?.message || 'Failed to download file. Please try again.';
                 showNotification(message, 'error');
             }
         });

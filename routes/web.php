@@ -10,19 +10,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified', 'check.subscription'])->name('dashboard');
+// User routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/courses/{course}/download', [CourseController::class, 'download'])->name('courses.download');
+    Route::get('/courses/{course}/download/{token}', [CourseController::class, 'downloadFile'])
+        ->middleware(['verify.download', 'active.subscription'])
+        ->name('courses.download.file');
 
+    // Subscription routes
+});
+
+// User routes
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('subscription-plans/plans',[SubscriptionPlanController::class, 'plans'])->name('subscription-plans.plans');
     Route::post('subscription-plans/{subscriptionPlan}/subscribe', [SubscriptionPlanController::class, 'subscribe'])->name('subscription-plans.subscribe');
-    Route::post('/courses/{course}/download', [CourseController::class, 'download'])->name('courses.download');
 });
 
-Route::resource('subscription-plans', SubscriptionPlanController::class);
 
+// Admin routes
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/users', [App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
