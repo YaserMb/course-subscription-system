@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
-    protected $fillable = ['name', 'description', 'url'];
+    protected $guarded = [];
 
     public function downloadHistories()
     {

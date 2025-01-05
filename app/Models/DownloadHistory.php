@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DownloadHistory extends Model
 {
-    protected $fillable = ['user_id', 'course_id', 'downloaded_at'];
+    protected $guarded = [];
 
     public function user()
     {
