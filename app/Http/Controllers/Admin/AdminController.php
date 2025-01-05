@@ -12,9 +12,6 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-
-
-        $totalUsers = User::count();
         $totalCourses = Course::count();
         $totalDownloads = DownloadHistory::count();
         $users = User::with(['downloadHistories'])
@@ -25,6 +22,7 @@ class AdminController extends Controller
             ->take(3)
             ->get();
 
+        $totalUsers = $users->count();
         return view('admin.dashboard', compact('totalUsers', 'totalCourses', 'totalDownloads', 'users'));
     }
 
