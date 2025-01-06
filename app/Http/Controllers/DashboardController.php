@@ -2,21 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Course;
-use App\Models\DownloadHistory;
 use App\Models\SubscriptionPlan;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $user = Auth::user();
+        $user = auth()->user();
+        $subscriptionPlan = $user->subscriptionPlan;
+        $downloadedCourses = $user->downloadHistories()->pluck('course_id');
         $allCourses = Course::all();
-        $subscriptionPlan = SubscriptionPlan::find($user->subscription_plan_id);
-        $downloadedCourses = $user->courses()->pluck('courses.id');
-        return view('dashboard', compact('allCourses', 'downloadedCourses', 'subscriptionPlan'));
+
+        // Get higher tier plans if user has a subscription
+        $hasHigherTierPlan = false;
+        if ($subscriptionPlan) {
+            $hasHigherTierPlan = SubscriptionPlan::where('limit', '>', $subscriptionPlan->limit)->exists();
+        }
+
+        return view('dashboard', [
+            'subscriptionPlan' => $subscriptionPlan,
+            'downloadedCourses' => $downloadedCourses,
+            'allCourses' => $allCourses,
+            'hasHigherTierPlan' => $hasHigherTierPlan,
+        ]);
     }
 }
 

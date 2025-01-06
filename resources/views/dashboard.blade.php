@@ -16,10 +16,16 @@
                         <div class="mb-4">
                             <h3 class="text-lg font-medium">Current Subscription Details</h3>
                             <p class="mt-2">Plan: {{ $subscriptionPlan->name }}</p>
-                            <p>Current Download Limit: {{ $subscriptionPlan->limit }}</p>
+                            <p>Current Download Limit: {{ $subscriptionPlan->limit }}
+                                @if($hasHigherTierPlan)
+                                    <a href="{{ route('subscription-plans.plans') }}" class="text-blue-600 hover:text-blue-800 ml-2">
+                                        (upgrade plan to increase download limit)
+                                    </a>
+                                @endif
+                            </p>
                             <div class="mt-4">
                                 <div class="flex items-center justify-between mb-2">
-                                    <p class="flex itdems-center">
+                                    <p class="flex items-center">
                                         Download Limit Used: <span id="download-count" class="ml-1">{{ $downloadedCourses->count() }}</span>
                                         <span class="mx-1">/</span>
                                         <span id="download-limit">{{ $subscriptionPlan->limit }}</span>

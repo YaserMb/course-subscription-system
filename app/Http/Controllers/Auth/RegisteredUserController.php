@@ -47,7 +47,7 @@ class RegisteredUserController extends Controller
 
         // Redirect to subscription plans if no plan is selected
         if (empty($user->subscription_plan_id)) {
-            return redirect()->route('subscription-plans.index')
+            return redirect()->route('subscription-plans.plans')
                 ->with('warning', 'Please select a subscription plan to continue.');
         }
 
