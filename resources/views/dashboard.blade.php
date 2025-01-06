@@ -23,7 +23,7 @@
                                     </a>
                                 @endif
                             </p>
-                            <div class="mt-4">
+                            {{-- <div class="mt-4">
                                 <div class="flex items-center justify-between mb-2">
                                     <p class="flex items-center">
                                         Download Limit Used: <span id="download-count" class="ml-1">{{ $downloadedCourses->count() }}</span>
@@ -39,7 +39,7 @@
                                 <div class="w-full bg-gray-200 rounded-full h-2.5">
                                     <div id="download-progress" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: {{ ($downloadedCourses->count() / $subscriptionPlan->limit) * 100 }}%"></div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     @else
                         <div class="mb-4">
