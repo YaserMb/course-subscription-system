@@ -18,20 +18,21 @@ Route::get('optimize', function(){
 
 // User routes
 Route::middleware(['auth'])->group(function () {
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Dashboard routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Course routes
     Route::post('/courses/{course}/download', [CourseController::class, 'download'])->name('courses.download');
     Route::get('/courses/{course}/download/{token}', [CourseController::class, 'downloadFile'])
         ->middleware(['verify.download', 'active.subscription'])
         ->name('courses.download.file');
 
     // Subscription routes
-});
-
-// User routes
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('subscription-plans/plans',[SubscriptionPlanController::class, 'plans'])->name('subscription-plans.plans');
     Route::post('subscription-plans/{subscriptionPlan}/subscribe', [SubscriptionPlanController::class, 'subscribe'])->name('subscription-plans.subscribe');
 });
