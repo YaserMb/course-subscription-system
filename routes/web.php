@@ -5,9 +5,15 @@ use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CourseController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Artisan;
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('optimize', function(){
+    Artisan::call('optimize:clear');
+    Artisan::call('optimize');
+
+    return 'optimized';
 });
 
 // User routes
