@@ -13,6 +13,11 @@
                 >
                     Download File
                 </button>
+            @elseif(!auth()->user()->subscription_plan_id)
+                <a href="{{ route('subscription-plans.plans') }}"
+                   class="inline-block text-center w-full bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition-colors">
+                    Subscribe to Plan
+                </a>
             @else
                 <button
                     data-course-id="{{ $course->id }}"
